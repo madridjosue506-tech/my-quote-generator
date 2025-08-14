@@ -1,0 +1,84 @@
+<!-- This is a complete, self-contained HTML file for a random quote generator. -->
+<!-- It includes all the necessary HTML, CSS (using Tailwind CSS), and JavaScript. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote Generator</title>
+    <!-- Include Tailwind CSS from a CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for a clean look */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Quote Container -->
+    <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-200 w-full max-w-lg text-center">
+
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Random Quote</h1>
+
+        <!-- Quote Display Area -->
+        <blockquote class="text-xl italic text-gray-700 mb-6" id="quote-text">
+            "The only way to do great work is to love what you do."
+        </blockquote>
+        <p class="text-lg font-semibold text-gray-600" id="quote-author">
+            - Steve Jobs
+        </p>
+
+        <!-- Button to fetch a new quote -->
+        <button id="new-quote-btn" class="mt-8 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg transition-colors">
+            Get New Quote
+        </button>
+
+    </div>
+
+    <!-- JavaScript for API fetching and logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get references to the HTML elements
+            const quoteText = document.getElementById('quote-text');
+            const quoteAuthor = document.getElementById('quote-author');
+            const newQuoteBtn = document.getElementById('new-quote-btn');
+
+            // Define the API URL
+            const apiUrl = 'https://api.quotable.io/random';
+
+            // Function to fetch a new quote from the API
+            const fetchQuote = async () => {
+                try {
+                    // Make an asynchronous request to the API
+                    const response = await fetch(apiUrl);
+                    // Check if the response was successful
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    // Parse the JSON data from the response
+                    const data = await response.json();
+                    
+                    // Update the HTML content with the new quote and author
+                    quoteText.innerText = `"${data.content}"`;
+                    quoteAuthor.innerText = `- ${data.author}`;
+                } catch (error) {
+                    // Log any errors to the console
+                    console.error('There was a problem with the fetch operation:', error);
+                    // Display an error message to the user
+                    quoteText.innerText = 'Could not fetch a quote. Please try again.';
+                    quoteAuthor.innerText = '';
+                }
+            };
+
+            // Add an event listener to the button to trigger a new quote fetch
+            newQuoteBtn.addEventListener('click', fetchQuote);
+
+            // Fetch an initial quote when the page loads
+            fetchQuote();
+        });
+    </script>
+</body>
+</html>
